@@ -28,12 +28,25 @@ class Health(Resource):
 
 
 class SpeciesResource(Resource):
-    def get(self):
-        species_list = Species.query.all()
-        return [
-            {"id": species.id, "name": species.name, "description": species.description}
-            for species in species_list
-        ], 200
+    def get(self, species_id=None):
+        if not species_id:
+            species_list = Species.query.all()
+            return [
+                {
+                    "id": species.id,
+                    "name": species.name,
+                    "description": species.description,
+                }
+                for species in species_list
+            ], 200
+        species = Species.query.get(species_id)
+        if species:
+            return {
+                "id": species.id,
+                "name": species.name,
+                "description": species.description,
+            }, 200
+        return {"message": "Species not found"}, 404
 
 
 class CatchResource(Resource):
