@@ -54,8 +54,9 @@ class CatchResource(Resource):
         catch_list = Catch.query.all()
         return [
             {
-                "id": catch.id,
+                "Catch": catch.id,
                 "species_id": catch.species_id,
+                "species": catch.species.name,
                 "weight": catch.weight,
                 "length": catch.length,
                 "date_caught": catch.date_caught.isoformat(),
@@ -66,8 +67,13 @@ class CatchResource(Resource):
 
 api.add_resource(Home, "/", endpoint="home")
 api.add_resource(Health, "/health", endpoint="health")
-api.add_resource(SpeciesResource, "/species", endpoint="species")
+api.add_resource(
+    SpeciesResource, "/species", "/species/<int:species_id>", endpoint="species"
+)
 api.add_resource(CatchResource, "/catches", endpoint="catches")
 
 
 app = create_app()
+
+if __name__ == "__main__":
+    app.run(debug=True)
