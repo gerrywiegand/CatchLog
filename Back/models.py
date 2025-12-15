@@ -1,8 +1,7 @@
 from datetime import datetime
 
+from database import db
 from marshmallow import Schema, fields
-
-from Back.database import db
 
 
 class Species(db.Model):

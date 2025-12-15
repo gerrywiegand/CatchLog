@@ -2,12 +2,27 @@ from config import DevelopmentConfig
 from database import db, migrate
 from flask import Flask
 from flask_restful import Api, Resource
-from models import *
+from models import Catch, Species
 
 api = Api()
 
 
-class HealthCheck(Resource):
+def create_app(config_class=DevelopmentConfig):
+    app = Flask(__name__)
+    app.config.from_object(config_class)
+
+    db.init_app(app)
+    migrate.init_app(app, db)
+    api.init_app(app)
+    return app
+
+
+class Home(Resource):
+    def get(self):
+        return {"message": "Welcome to the Catch Log API"}, 200
+
+
+class Health(Resource):
     def get(self):
         return {"status": "ok"}, 200
 
@@ -36,18 +51,10 @@ class CatchResource(Resource):
         ], 200
 
 
-def create_app(config_class=DevelopmentConfig):
-    app = Flask(__name__)
-    app.config.from_object(config_class)
-
-    db.init_app(app)
-    migrate.init_app(app, db)
-    api.init_app(app)
-    api.add_resource(HealthCheck, "/health", endpoint="health")
-    api.add_resource(SpeciesResource, "/species", endpoint="species")
-    api.add_resource(CatchResource, "/catches", endpoint="catches")
-
-    return app
+api.add_resource(Home, "/", endpoint="home")
+api.add_resource(Health, "/health", endpoint="health")
+api.add_resource(SpeciesResource, "/species", endpoint="species")
+api.add_resource(CatchResource, "/catches", endpoint="catches")
 
 
 app = create_app()
