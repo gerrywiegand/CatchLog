@@ -1,5 +1,6 @@
 from app import app, db
-from models import Catch, Species
+
+from Back.models import Catch, Species
 
 
 def create_fish():

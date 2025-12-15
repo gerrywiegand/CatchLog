@@ -1,6 +1,8 @@
 from datetime import datetime
 
-from Back.App.database import db
+from marshmallow import Schema, fields
+
+from Back.database import db
 
 
 class Species(db.Model):
@@ -12,6 +14,12 @@ class Species(db.Model):
 
     def __repr__(self):
         return f"<Species {self.name}>"
+
+
+class SpeciesSchema(Schema):
+    id = fields.Int(dump_only=True)
+    name = fields.Str(required=True)
+    description = fields.Str()
 
 
 class Catch(db.Model):
@@ -27,3 +35,11 @@ class Catch(db.Model):
 
     def __repr__(self):
         return f"<Catch {self.species.name} - {self.weight}kg>"
+
+
+class CatchSchema(Schema):
+    id = fields.Int(dump_only=True)
+    species_id = fields.Int(required=True)
+    weight = fields.Float()
+    length = fields.Float()
+    date_caught = fields.DateTime()
