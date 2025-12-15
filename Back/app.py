@@ -50,19 +50,31 @@ class SpeciesResource(Resource):
 
 
 class CatchResource(Resource):
-    def get(self):
-        catch_list = Catch.query.all()
-        return [
-            {
+    def get(self, catch_id=None):
+        if not catch_id:
+            catch_list = Catch.query.all()
+            return [
+                {
+                    "Catch": catch.id,
+                    "species_id": catch.species_id,
+                    "species": catch.species.name,
+                    "weight": catch.weight,
+                    "length": catch.length,
+                    "date_caught": catch.date_caught.isoformat(),
+                }
+                for catch in catch_list
+            ], 200
+        catch = Catch.query.get(catch_id)
+        if catch:
+            return {
                 "Catch": catch.id,
                 "species_id": catch.species_id,
                 "species": catch.species.name,
                 "weight": catch.weight,
                 "length": catch.length,
                 "date_caught": catch.date_caught.isoformat(),
-            }
-            for catch in catch_list
-        ], 200
+            }, 200
+        return {"message": "Catch not found"}, 404
 
 
 api.add_resource(Home, "/", endpoint="home")
@@ -70,7 +82,9 @@ api.add_resource(Health, "/health", endpoint="health")
 api.add_resource(
     SpeciesResource, "/species", "/species/<int:species_id>", endpoint="species"
 )
-api.add_resource(CatchResource, "/catches", endpoint="catches")
+api.add_resource(
+    CatchResource, "/catches", "/catches/<int:catch_id>", endpoint="catches"
+)
 
 
 app = create_app()
