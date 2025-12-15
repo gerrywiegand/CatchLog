@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from Back.App.database import db
+from Back.database import db
 
 
 class Species(db.Model):
