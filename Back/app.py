@@ -1,6 +1,6 @@
 from config import DevelopmentConfig
 from database import db, migrate
-from flask import Flask
+from flask import Flask, jsonify, request
 from flask_restful import Api, Resource
 from models import Catch, Species
 
@@ -48,6 +48,22 @@ class SpeciesResource(Resource):
             }, 200
         return {"message": "Species not found"}, 404
 
+    def post(self):
+        required = ["name", "description"]
+        data = request.get_json()
+        if any(field not in data for field in required):
+            return {"message": "Missing required fields"}, 400
+        new_species = Species(
+            name=data.get("name"), description=data.get("description")
+        )
+        db.session.add(new_species)
+        db.session.commit()
+        return {
+            "id": new_species.id,
+            "name": new_species.name,
+            "description": new_species.description,
+        }, 201
+
 
 class CatchResource(Resource):
     def get(self, catch_id=None):
@@ -67,7 +83,7 @@ class CatchResource(Resource):
         catch = Catch.query.get(catch_id)
         if catch:
             return {
-                "Catch": catch.id,
+                "id": catch.id,
                 "species_id": catch.species_id,
                 "species": catch.species.name,
                 "weight": catch.weight,
@@ -75,6 +91,31 @@ class CatchResource(Resource):
                 "date_caught": catch.date_caught.isoformat(),
             }, 200
         return {"message": "Catch not found"}, 404
+
+    def post(self):
+        data = request.get_json()
+        required = ["species_id", "weight", "length"]
+        if any(field not in data for field in required):
+            return {"message": "Missing required fields"}, 400
+        if not Species.query.get(data.get("species_id")):
+            return {"message": "Species not found"}, 404
+        if data.get("weight") <= 0 or data.get("length") <= 0:
+            return {"message": "Weight and length must be positive values"}, 400
+
+        new_catch = Catch(
+            species_id=data.get("species_id"),
+            weight=data.get("weight"),
+            length=data.get("length"),
+        )
+        db.session.add(new_catch)
+        db.session.commit()
+        return {
+            "id": new_catch.id,
+            "species_id": new_catch.species_id,
+            "weight": new_catch.weight,
+            "length": new_catch.length,
+            "date_caught": new_catch.date_caught.isoformat(),
+        }, 201
 
 
 api.add_resource(Home, "/", endpoint="home")
