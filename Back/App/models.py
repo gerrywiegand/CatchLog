@@ -1,9 +1,11 @@
 from datetime import datetime
 
-from Back.App import db
+from Back.App.database import db
 
 
-class Species(db.model):
+class Species(db.Model):
+    __tablename__ = "species"
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), unique=True, nullable=False)
     description = db.Column(db.Text, nullable=True)
@@ -12,12 +14,14 @@ class Species(db.model):
         return f"<Species {self.name}>"
 
 
-class Catch(db.model):
+class Catch(db.Model):
+    __tablename__ = "catches"
+
     id = db.Column(db.Integer, primary_key=True)
     species_id = db.Column(db.Integer, db.ForeignKey("species.id"), nullable=False)
-    weight = db.Column(db.Float, nullable=False)
-    length = db.Column(db.Float, nullable=False)
-    date_caught = db.Column(db.DateTime, nullable=False)
+    weight = db.Column(db.Float, nullable=True)
+    length = db.Column(db.Float, nullable=True)
+    date_caught = db.Column(db.DateTime, nullable=False, default=datetime.now)
 
     species = db.relationship("Species", backref=db.backref("catches", lazy=True))
 
