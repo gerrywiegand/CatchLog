@@ -1,6 +1,7 @@
 from config import DevelopmentConfig
 from database import db, migrate
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 from flask_restful import Api, Resource
 from models import Catch, Species
 
@@ -10,6 +11,7 @@ api = Api()
 def create_app(config_class=DevelopmentConfig):
     app = Flask(__name__)
     app.config.from_object(config_class)
+    CORS(app)
 
     db.init_app(app)
     migrate.init_app(app, db)
@@ -71,7 +73,7 @@ class CatchResource(Resource):
             catch_list = Catch.query.all()
             return [
                 {
-                    "Catch": catch.id,
+                    "id": catch.id,
                     "species_id": catch.species_id,
                     "species": catch.species.name,
                     "weight": catch.weight,
