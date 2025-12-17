@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from database import db
-from marshmallow import Schema, fields
+from marshmallow import Schema, ValidationError, fields, validates
 
 
 class Species(db.Model):
@@ -9,7 +9,7 @@ class Species(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), unique=True, nullable=False)
-    description = db.Column(db.Text, nullable=True)
+    description = db.Column(db.string(300), nullable=True)
     catches = db.relationship("Catch", back_populates="species")
 
     def __repr__(self):
@@ -20,6 +20,11 @@ class SpeciesSchema(Schema):
     id = fields.Int(dump_only=True)
     name = fields.Str(required=True)
     description = fields.Str()
+
+    @validates("name")
+    def validate_name(self, value):
+        if not value:
+            raise ValidationError("Species name cannot be empty.")
 
 
 class Catch(db.Model):
@@ -46,14 +51,40 @@ class CatchSchema(Schema):
     length = fields.Float()
     date_caught = fields.DateTime()
 
+    @validates("weight")
+    def validate_weight(self, value):
+        if value is not None and value <= 0:
+            raise ValidationError("Weight must be a non-negative value.")
+
+    @validates("length")
+    def validate_length(self, value):
+        if value is not None and value <= 0:
+            raise ValidationError("Length must be a non-negative value.")
+
+    @validates("date_caught")
+    def validate_date_caught(self, value):
+        now = datetime.now()
+        if value > now:
+            raise ValidationError("Date caught cannot be in the future.")
+
 
 class User(db.Model):
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=False)
+    username = db.Column(db.String(20), unique=True, nullable=False)
 
     catches = db.relationship("Catch", back_populates="user")
 
     def __repr__(self):
         return f"<User {self.username}>"
+
+
+class UserSchema(Schema):
+    id = fields.Int(dump_only=True)
+    username = fields.Str(required=True)
+
+    @validates("username")
+    def validate_username(self, value):
+        if not value:
+            raise ValidationError("Username cannot be empty.")
