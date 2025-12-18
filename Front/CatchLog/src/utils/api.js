@@ -1,4 +1,4 @@
-import { API_BASE } from "../config";
+import { API_BASE } from "../utils/config";
 
 export const getSpecies = async () => {
   try {

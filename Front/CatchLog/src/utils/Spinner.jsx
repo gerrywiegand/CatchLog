@@ -1,9 +1,9 @@
-import { HourGlass } from "react-loader-spinner";
-
-export default function Spinner() {
+import { Hourglass } from "react-loader-spinner";
+import React, { useState, useEffect } from "react";
+function Spinner() {
   return (
     <div className="spinner-container">
-      <HourGlass
+      <Hourglass
         height="80"
         width="80"
         color="#4fa94d"
@@ -15,3 +15,4 @@ export default function Spinner() {
     </div>
   );
 }
+export default Spinner;
