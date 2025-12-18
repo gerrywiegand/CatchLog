@@ -14,6 +14,20 @@ export const getSpecies = async () => {
   }
 };
 
+export const getCatches = async () => {
+  try {
+    const response = await fetch(`${API_BASE}/catches`);
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching catches:", error);
+    throw error;
+  }
+};
+
 export async function createCatch(catchData) {
   const res = await fetch(`${API_BASE}/catches`, {
     method: "POST",

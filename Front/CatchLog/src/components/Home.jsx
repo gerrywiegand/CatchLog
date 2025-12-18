@@ -9,6 +9,11 @@ function Home() {
 
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
+
+  const [speciesMap, setSpeciesMap] = useState({});
+  constant[(catches, setCatches)] = useState([]);
+  constant[(loading, setLoading)] = useState(false);
+  constant[(error, setError)] = useState(null);
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const created = params.get("created");
