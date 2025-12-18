@@ -1,0 +1,87 @@
+import { useEffect } from "react";
+import React, { useState } from "react";
+import { getSpecies } from "../utils/api";
+import Spinner from "../utils/Spinner";
+import Autocomplete from "@mui/material/Autocomplete";
+import TextField from "@mui/material/TextField";
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+
+function AddCatch() {
+  const [species, setSpecies] = useState([]);
+  const [selectedSpeciesID, setSelectedSpeciesID] = useState("");
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [weight, setWeight] = useState("");
+  const [length, setLength] = useState("");
+  const canSubmit = selectedSpeciesID && weight && length ? true : false;
+
+  const selectedSpecies =
+    species.find((s) => s.id === selectedSpeciesID) || null;
+
+  useEffect(() => {
+    async function fetchSpecies() {
+      setError(null);
+      setLoading(true);
+      try {
+        const data = await getSpecies();
+        setSpecies(data);
+      } catch (err) {
+        setError("Failed to fetch species");
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchSpecies();
+  }, []);
+
+  return (
+    <div>
+      <h1>Add Catch Page</h1>
+      <p>Add Catch page working!</p>
+      <div>{loading && <Spinner />}</div>
+      <Autocomplete
+        options={species}
+        getOptionLabel={(option) => option.name}
+        value={selectedSpecies}
+        onChange={(event, newValue) => {
+          setSelectedSpeciesID(newValue ? newValue.id : "");
+        }}
+        renderInput={(params) => <TextField {...params} label="Species" />}
+      />
+      <Box sx={{ display: "flex", gap: 4, mt: 2 }}>
+        <TextField
+          label="Weight(lbs)"
+          type="number"
+          slotProps={{ htmlInput: { min: 0.1, max: 500, step: 0.1 } }}
+          size="small"
+          value={weight}
+          onChange={(e) => setWeight(e.target.value)}
+        />
+        <TextField
+          label="Length(in)"
+          type="number"
+          slotProps={{ htmlInput: { min: 0.1, max: 300, step: 0.1 } }}
+          value={length}
+          size="small"
+          onChange={(e) => setLength(e.target.value)}
+        />
+      </Box>
+      <Button
+        variant="contained"
+        size="large"
+        sx={{ mt: 3 }}
+        disabled={!canSubmit}
+        onClick={() => {
+          console.log("Submit clicked");
+        }}
+      >
+        Submit
+      </Button>
+
+      <div>selectedSpeciesID: {selectedSpeciesID}</div>
+    </div>
+  );
+}
+export default AddCatch;
