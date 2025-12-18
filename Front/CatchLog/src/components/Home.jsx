@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
+import { getCatches, getSpecies } from "../utils/api";
+import CatchTable from "./CatchTable";
 
 function Home() {
   const location = useLocation();
@@ -11,9 +13,10 @@ function Home() {
   const [message, setMessage] = useState("");
 
   const [speciesMap, setSpeciesMap] = useState({});
-  constant[(catches, setCatches)] = useState([]);
-  constant[(loading, setLoading)] = useState(false);
-  constant[(error, setError)] = useState(null);
+  const [catches, setCatches] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const created = params.get("created");
@@ -24,6 +27,31 @@ function Home() {
       navigate("/", { replace: true });
     }
   }, [location.search, navigate]);
+
+  useEffect(() => {
+    async function fetchData() {
+      setLoading(true);
+      setError(null);
+      try {
+        const [speciesData, catchesData] = await Promise.all([
+          getSpecies(),
+          getCatches(),
+        ]);
+        const speciesMapTemp = {};
+        speciesData.forEach((s) => {
+          speciesMapTemp[s.id] = s.name;
+        });
+        setSpeciesMap(speciesMapTemp);
+        setCatches(catchesData);
+      } catch (err) {
+        setError("Failed to fetch data");
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchData();
+  }, []);
+
   return (
     <div>
       <h1>Home Page</h1>
@@ -42,6 +70,7 @@ function Home() {
           {message}
         </Alert>
       </Snackbar>
+      <CatchTable catches={catches} speciesMap={speciesMap} />
     </div>
   );
 }
