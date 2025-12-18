@@ -1,6 +1,6 @@
-import { useEffect } from "react";
-import React, { useState } from "react";
-import { getSpecies } from "../utils/api";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { createCatch, getSpecies } from "../utils/api";
 import Spinner from "../utils/Spinner";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
@@ -15,6 +15,8 @@ function AddCatch() {
   const [loading, setLoading] = useState(false);
   const [weight, setWeight] = useState("");
   const [length, setLength] = useState("");
+  const [submitError, setSubmitError] = useState(null);
+  const navigate = useNavigate();
   const canSubmit = selectedSpeciesID && weight && length ? true : false;
 
   const selectedSpecies =
@@ -72,15 +74,32 @@ function AddCatch() {
         variant="contained"
         size="large"
         sx={{ mt: 3 }}
-        disabled={!canSubmit}
-        onClick={() => {
-          console.log("Submit clicked");
+        disabled={!canSubmit || loading}
+        onClick={async () => {
+          const catchData = {
+            species_id: selectedSpeciesID,
+            weight: parseFloat(weight),
+            length: parseFloat(length),
+          };
+          setLoading(true);
+          setLoading(true);
+          setSubmitError(null);
+          console.log("Submitting catch data:", catchData);
+          try {
+            await createCatch(catchData);
+            console.log("Catch created successfully");
+            navigate("/?created=1");
+          } catch (error) {
+            console.error("Error creating catch:", error);
+            setSubmitError("Failed to create catch");
+          } finally {
+            setLoading(false);
+            setLoading(false);
+          }
         }}
       >
         Submit
       </Button>
-
-      <div>selectedSpeciesID: {selectedSpeciesID}</div>
     </div>
   );
 }
