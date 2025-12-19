@@ -37,12 +37,15 @@ function Home() {
           getSpecies(),
           getCatches(),
         ]);
+        const sorted = catchesData.sort(
+          (a, b) => new Date(b.date_caught) - new Date(a.date_caught)
+        );
         const speciesMapTemp = {};
         speciesData.forEach((s) => {
           speciesMapTemp[s.id] = s.name;
         });
         setSpeciesMap(speciesMapTemp);
-        setCatches(catchesData);
+        setCatches(sorted);
       } catch (err) {
         setError("Failed to fetch data");
       } finally {
