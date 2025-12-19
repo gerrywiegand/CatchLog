@@ -8,6 +8,7 @@ import PhishingIcon from "@mui/icons-material/Phishing";
 import Stack from "@mui/material/Stack";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import Chip from "@mui/material/Chip";
+import SetMealIcon from "@mui/icons-material/SetMeal";
 
 export default function CatchCards({ catches = [], speciesMap = {} }) {
   return (
@@ -24,7 +25,7 @@ export default function CatchCards({ catches = [], speciesMap = {} }) {
                 alignItems="center"
                 justifyContent="center"
               >
-                <PhishingIcon fontSize="large" color="primary" />
+                <SetMealIcon fontSize="large" color="primary" />
                 <Typography variant="h4">{speciesName}</Typography>
               </Stack>
               <Stack

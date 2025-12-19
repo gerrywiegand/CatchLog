@@ -18,10 +18,8 @@ class Species(db.Model):
 
 class SpeciesSchema(Schema):
     id = fields.Int(dump_only=True)
-    name = fields.Str(required=True, validate=validate.Length
-    (min=3, max=100))
-    description = fields.Str(validate=validate.Length
-    (max=300))
+    name = fields.Str(required=True, validate=validate.Length(min=3, max=100))
+    description = fields.Str(validate=validate.Length(max=300))
 
     @validates("name")
     def validate_name(self, value):
@@ -36,7 +34,7 @@ class Catch(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=True)
     species_id = db.Column(db.Integer, db.ForeignKey("species.id"), nullable=False)
     weight = db.Column(db.Float, nullable=True)
-    Length= db.Column(db.Float, nullable=True)
+    length = db.Column(db.Float, nullable=True)
     date_caught = db.Column(db.DateTime, nullable=False, default=datetime.now)
 
     species = db.relationship("Species", back_populates="catches")
@@ -50,8 +48,7 @@ class CatchSchema(Schema):
     id = fields.Int(dump_only=True)
     species_id = fields.Int(required=True)
     weight = fields.Float()
-    Length
-     = fields.Float()
+    length = fields.Float()
     date_caught = fields.DateTime(required=False, allow_none=False)
 
     @validates("weight")
@@ -59,13 +56,10 @@ class CatchSchema(Schema):
         if value is not None and value <= 0:
             raise ValidationError("Weight must be a non-negative value.")
 
-    @validates("Length
-    ")
-    def validate_Length
-    (self, value):
+    @validates("length")
+    def validate_Length(self, value):
         if value is not None and value < 0:
-            raise ValidationError("Length
-             must be a non-negative value.")
+            raise ValidationError("length must be a non-negative value.")
 
     @validates("date_caught")
     def validate_date_caught(self, value):

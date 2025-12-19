@@ -19,9 +19,6 @@ function App() {
             <Route path="/addcatch" element={<AddCatch />} />
             <Route path="/catches" element={<CatchesPage />} />
           </Routes>
-          <div>
-            <h1>CatchLog App</h1>
-          </div>
         </Stack>
       </Container>
     </>

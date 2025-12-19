@@ -7,6 +7,7 @@ import { getCatches, getSpecies } from "../utils/api";
 import CatchTable from "./CatchTable";
 import Spinner from "../utils/Spinner";
 import Container from "@mui/material/Container";
+import Box from "@mui/material/Box";
 
 function Home() {
   const location = useLocation();
@@ -60,6 +61,25 @@ function Home() {
 
   return (
     <div>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          mt: 3,
+          mb: 2,
+        }}
+      >
+        <Box
+          component="img"
+          src="/Logo.png"
+          alt="CatchLog Logo"
+          sx={{
+            width: "100%",
+            maxWidth: 260, // caps size on desktop
+            height: "auto",
+          }}
+        />
+      </Box>
       <Container maxWidth="md" sx={{ mt: 4, mb: 6 }}>
         <h1>Home Page</h1>
         <p>Welcome to the CatchLog App!</p>
