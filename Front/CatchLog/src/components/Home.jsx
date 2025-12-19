@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
+import Typography from "@mui/material/Typography";
 import { getCatches, getSpecies } from "../utils/api";
 import CatchTable from "./CatchTable";
+import Spinner from "../utils/Spinner";
 
 function Home() {
   const location = useLocation();
@@ -73,7 +75,16 @@ function Home() {
           {message}
         </Alert>
       </Snackbar>
-      <CatchTable catches={catches} speciesMap={speciesMap} />
+      {loading && <Spinner />}
+      {error && <Alert severity="error">{error}</Alert>}
+      {catches.length === 0 && !loading && !error && (
+        <Typography variants="h6">
+          Log your first catch to get started!
+        </Typography>
+      )}
+      {!loading && !error && catches.length > 0 && (
+        <CatchTable catches={catches} speciesMap={speciesMap} />
+      )}
     </div>
   );
 }

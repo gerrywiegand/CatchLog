@@ -15,8 +15,8 @@ function CatchTable({ catches, speciesMap }) {
           <TableRow>
             <TableCell>Catch ID</TableCell>
             <TableCell>Species</TableCell>
-            <TableCell>Weight (lbs)</TableCell>
-            <TableCell>Length (inches)</TableCell>
+            <TableCell align="right">Weight (lbs)</TableCell>
+            <TableCell align="right">Length (inches)</TableCell>
             <TableCell>Date</TableCell>
           </TableRow>
         </TableHead>
@@ -32,8 +32,8 @@ function CatchTable({ catches, speciesMap }) {
               <TableCell>
                 {speciesMap[catchObj.species_id] || "Unknown"}
               </TableCell>
-              <TableCell>{catchObj.weight}</TableCell>
-              <TableCell>{catchObj.length}</TableCell>
+              <TableCell align="right">{catchObj.weight}</TableCell>
+              <TableCell align="right">{catchObj.length}</TableCell>
               <TableCell>
                 {catchObj.date_caught
                   ? new Date(catchObj.date_caught).toLocaleString()
