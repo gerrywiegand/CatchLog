@@ -9,7 +9,7 @@ import Stack from "@mui/material/Stack";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import Chip from "@mui/material/Chip";
 
-export default function CatchCards({ catches, speciesMap }) {
+export default function CatchCards({ catches = [], speciesMap = {} }) {
   return (
     <div>
       {catches.map((catchObj) => {
