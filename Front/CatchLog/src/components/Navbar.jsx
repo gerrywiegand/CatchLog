@@ -7,6 +7,7 @@ import { Link as RouterLink } from "react-router-dom";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import React from "react";
+import theme from "../styles/theme.js";
 
 export default function Navbar() {
   const theme = useTheme();
@@ -30,7 +31,7 @@ export default function Navbar() {
             ].map((item) => (
               <Button
                 key={item.to}
-                color="inherit"
+                color="primary"
                 component={RouterLink}
                 to={item.to}
                 variant="contained"
