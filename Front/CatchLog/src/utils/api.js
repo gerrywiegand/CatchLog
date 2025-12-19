@@ -1,5 +1,5 @@
 import { API_BASE } from "../utils/config";
-
+// keeps API calls in one place for easier maintenance
 export const getSpecies = async () => {
   try {
     const response = await fetch(`${API_BASE}/species`);

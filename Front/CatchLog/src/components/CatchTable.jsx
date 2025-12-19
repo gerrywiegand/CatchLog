@@ -6,9 +6,20 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useTheme } from "@mui/material/styles";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import CatchCards from "./CatchCards.jsx";
 
-function CatchTable({ catches, speciesMap }) {
+function CatchTable({ catches = [], speciesMap = {} }) {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  if (isMobile) {
+    // Show cards on mobile
+    return <CatchCards catches={catches} speciesMap={speciesMap} />;
+  }
   return (
+    // Show table on desktop
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="catch table">
         <TableHead>

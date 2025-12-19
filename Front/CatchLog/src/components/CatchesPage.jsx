@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import Typography from "@mui/material/Typography";
 import { getCatches, getSpecies } from "../utils/api";
@@ -8,29 +6,11 @@ import CatchTable from "./CatchTable";
 import Spinner from "../utils/Spinner";
 import Container from "@mui/material/Container";
 
-function Home() {
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  const [open, setOpen] = useState(false);
-  const [message, setMessage] = useState("");
-
+function CatchesPage() {
   const [speciesMap, setSpeciesMap] = useState({});
   const [catches, setCatches] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const created = params.get("created");
-    const species = params.get("species");
-    if (created === "1") {
-      setOpen(true);
-      setMessage(species ? `Catch created: ${species} ✅` : "Catch created ✅");
-      navigate("/", { replace: true });
-    }
-  }, [location.search, navigate]);
-
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
@@ -60,24 +40,9 @@ function Home() {
 
   return (
     <div>
+      <h1>Catches Page</h1>
+      <p>View all your logged catches below.</p>
       <Container maxWidth="md" sx={{ mt: 4, mb: 6 }}>
-        <h1>Home Page</h1>
-        <p>Welcome to the CatchLog App!</p>
-        <p>Below are your 5 most recent catches</p>
-        <Snackbar
-          open={open}
-          autoHideDuration={5000} // 5 seconds and banner will disappear
-          onClose={() => setOpen(false)}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        >
-          <Alert
-            onClose={() => setOpen(false)}
-            severity="success"
-            variant="filled"
-          >
-            {message}
-          </Alert>
-        </Snackbar>
         {loading && <Spinner />}
         {error && <Alert severity="error">{error}</Alert>}
         {catches.length === 0 &&
@@ -88,10 +53,10 @@ function Home() {
             </Typography>
           )}
         {!loading && !error && catches.length > 0 && (
-          <CatchTable catches={catches.slice(0, 5)} speciesMap={speciesMap} />
+          <CatchTable catches={catches} speciesMap={speciesMap} />
         )}
       </Container>
     </div>
   );
 }
-export default Home;
+export default CatchesPage;
