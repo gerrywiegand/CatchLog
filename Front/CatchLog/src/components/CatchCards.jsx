@@ -17,8 +17,8 @@ export default function CatchCards({ catches, speciesMap }) {
         return (
           <Card key={catchObj.id}>
             <CardContent>
-              <Stack
-                sx="width: 100%"
+              <Stack // sx must be max width and justify center to center align
+                sx={{ width: "100%" }}
                 direction="row"
                 spacing={2}
                 alignItems="center"
@@ -28,7 +28,7 @@ export default function CatchCards({ catches, speciesMap }) {
                 <Typography>{speciesName}</Typography>
               </Stack>
               <Stack
-                sx="width: 100%"
+                sx={{ width: "100%" }}
                 direction="row"
                 spacing={2}
                 alignItems="center"
@@ -38,7 +38,7 @@ export default function CatchCards({ catches, speciesMap }) {
                 <Chip label={`${catchObj.weight} lbs`} Chip />
               </Stack>
               <Stack
-                sx="width: 100%"
+                sx={{ width: "100%" }}
                 direction="row"
                 spacing={2}
                 alignItems="center"
@@ -48,7 +48,7 @@ export default function CatchCards({ catches, speciesMap }) {
                 <Chip label={`${catchObj.length} in`} Chip />
               </Stack>
               <Stack
-                sx="width: 100%"
+                sx={{ width: "100%" }}
                 direction="row"
                 spacing={2}
                 alignItems="center"

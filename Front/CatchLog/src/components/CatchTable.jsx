@@ -11,13 +11,15 @@ import { useTheme } from "@mui/material/styles";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import CatchCards from "./CatchCards.jsx";
 
-function CatchTable({ catches, speciesMap }) {
+function CatchTable({ catches = [], speciesMap = {} }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   if (isMobile) {
+    // Show cards on mobile
     return <CatchCards catches={catches} speciesMap={speciesMap} />;
   }
   return (
+    // Show table on desktop
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="catch table">
         <TableHead>

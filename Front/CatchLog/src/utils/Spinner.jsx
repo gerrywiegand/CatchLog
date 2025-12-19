@@ -1,5 +1,6 @@
 import { Hourglass } from "react-loader-spinner";
 import React, { useState, useEffect } from "react";
+// Spinner component to indicate loading state
 function Spinner() {
   return (
     <div className="spinner-container">

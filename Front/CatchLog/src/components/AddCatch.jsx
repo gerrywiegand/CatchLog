@@ -17,7 +17,7 @@ function AddCatch() {
   const [length, setLength] = useState("");
   const [submitError, setSubmitError] = useState(null);
   const navigate = useNavigate();
-  const canSubmit = selectedSpeciesID && weight && length ? true : false;
+  const canSubmit = selectedSpeciesID && weight && length ? true : false; // Simple validation
 
   const selectedSpecies =
     species.find((s) => s.id === selectedSpeciesID) || null;
