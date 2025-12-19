@@ -15,7 +15,7 @@ export default function CatchCards({ catches, speciesMap }) {
       {catches.map((catchObj) => {
         const speciesName = speciesMap[catchObj.species_id] || "Unknown";
         return (
-          <Card key={catchObj.id}>
+          <Card key={catchObj.id} variant="outlined" sx={{ mb: 2 }}>
             <CardContent>
               <Stack // sx must be max width and justify center to center align
                 sx={{ width: "100%" }}

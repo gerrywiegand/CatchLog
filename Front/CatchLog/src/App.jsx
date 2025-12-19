@@ -4,10 +4,12 @@ import { Routes, Route } from "react-router-dom";
 import Home from "./components/Home.jsx";
 import AddCatch from "./components/AddCatch.jsx";
 import CatchesPage from "./components/CatchesPage.jsx";
+import NavBar from "./components/Navbar.jsx";
 
 function App() {
   return (
     <>
+      <NavBar />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/addcatch" element={<AddCatch />} />

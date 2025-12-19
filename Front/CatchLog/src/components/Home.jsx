@@ -63,6 +63,7 @@ function Home() {
       <Container maxWidth="md" sx={{ mt: 4, mb: 6 }}>
         <h1>Home Page</h1>
         <p>Welcome to the CatchLog App!</p>
+        <p>Below are your 5 most recent catches</p>
         <Snackbar
           open={open}
           autoHideDuration={5000} // 5 seconds and banner will disappear

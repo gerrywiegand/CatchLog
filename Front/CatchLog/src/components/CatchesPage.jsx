@@ -40,6 +40,8 @@ function CatchesPage() {
 
   return (
     <div>
+      <h1>Catches Page</h1>
+      <p>View all your logged catches below.</p>
       <Container maxWidth="md" sx={{ mt: 4, mb: 6 }}>
         {loading && <Spinner />}
         {error && <Alert severity="error">{error}</Alert>}
