@@ -101,7 +101,9 @@ class Me(Resource):
 
 class SpeciesResource(Resource):
     def get(self, species_id=None):
+        user_id = session.get("user_id")
         if not species_id:
+
             species_list = Species.query.all()
             return [
                 {
