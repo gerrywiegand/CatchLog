@@ -8,18 +8,29 @@ from models import Catch, Species, User
 api = Api()
 
 openRoutes = ["/", "/health"]
-protectedRoutes = ["/species", "/catches"]
 
 
 def create_app(config_class=DevelopmentConfig):
     app = Flask(__name__)
     app.config.from_object(config_class)
-    CORS(app)
+    CORS(
+        app,
+        supports_credentials=True,
+        resources={r"/*": {"origins": "http://localhost:5173"}},
+    )
 
     db.init_app(app)
     migrate.init_app(app, db)
     api.init_app(app)
     return app
+
+
+@app.before_request
+def require_login():
+    if request.path in openRoutes:
+        return
+    if not session.get("user_id"):
+        return jsonify({"message": "Authentication required"}), 401
 
 
 class Home(Resource):
@@ -59,6 +70,20 @@ class login(Resource):
         if user and check_password_hash(user.password_hash, data.get("password")):
             return {"message": "Login successful"}, 200
         return {"message": "Invalid username or password"}, 401
+
+
+class Logout(Resource):
+    def post(self):
+        session.clear()
+        return {"message": "Logout successful"}, 200
+
+
+class me(Resource):
+    def get(self):
+        if not session.get("user_id"):
+            return {"message": "Not logged in"}, 401
+        user = User.query.get(session.get("user_id"))
+        return {"id": user.id, "username": user.username}, 200
 
 
 class SpeciesResource(Resource):
