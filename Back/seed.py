@@ -1,5 +1,18 @@
 from app import app, db
-from models import Catch, Species
+from models import Catch, Species, User
+from werkzeug.security import generate_password_hash
+
+
+def create_users():
+    user1 = User(username="angler1", password_hash=generate_password_hash("password1"))
+    user2 = User(
+        username="fisherman2", password_hash=generate_password_hash("password2")
+    )
+    user3 = User(
+        username="catchmaster", password_hash=generate_password_hash("password3")
+    )
+    users_list = [user1, user2, user3]
+    db.session.add_all(users_list)
 
 
 def create_fish():
@@ -69,16 +82,16 @@ def create_fish():
 
 
 def create_catches():
-    catch1 = Catch(species_id=1, weight=5.2, length=18.0)
-    catch2 = Catch(species_id=2, weight=3.5, length=15.0)
-    catch3 = Catch(species_id=3, weight=4.0, length=16.5)
-    catch4 = Catch(species_id=4, weight=2.8, length=14.0)
-    catch5 = Catch(species_id=5, weight=10.0, length=25.0)
-    catch6 = Catch(species_id=6, weight=6.1, length=20.0)
-    catch7 = Catch(species_id=7, weight=1.5, length=10.0)
-    catch8 = Catch(species_id=8, weight=0.9, length=8.0)
-    catch9 = Catch(species_id=9, weight=2.3, length=12.0)
-    catch10 = Catch(species_id=10, weight=8.4, length=22.0)
+    catch1 = Catch(species_id=1, weight=5.2, length=18.0, user_id=1)
+    catch2 = Catch(species_id=2, weight=3.5, length=15.0, user_id=1)
+    catch3 = Catch(species_id=3, weight=4.0, length=16.5, user_id=2)
+    catch4 = Catch(species_id=4, weight=2.8, length=14.0, user_id=2)
+    catch5 = Catch(species_id=5, weight=10.0, length=25.0, user_id=3)
+    catch6 = Catch(species_id=6, weight=6.1, length=20.0, user_id=3)
+    catch7 = Catch(species_id=7, weight=1.5, length=10.0, user_id=1)
+    catch8 = Catch(species_id=8, weight=0.9, length=8.0, user_id=2)
+    catch9 = Catch(species_id=9, weight=2.3, length=12.0, user_id=3)
+    catch10 = Catch(species_id=10, weight=8.4, length=22.0, user_id=1)
 
     catches_list = [
         catch1,
@@ -98,6 +111,7 @@ def create_catches():
 def seed_database():
     db.drop_all()
     db.create_all()
+    create_users()
     create_fish()
     create_catches()
     db.session.commit()
