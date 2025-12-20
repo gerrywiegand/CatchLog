@@ -102,6 +102,8 @@ class Me(Resource):
 class SpeciesResource(Resource):
     def get(self, species_id=None):
         user_id = session.get("user_id")
+        if not user_id:
+            return {"message": "Not logged in"}, 401
         if not species_id:
 
             species_list = Species.query.all()
@@ -123,6 +125,9 @@ class SpeciesResource(Resource):
         return {"message": "Species not found"}, 404
 
     def post(self):
+        user_id = session.get("user_id")
+        if not user_id:
+            return {"message": "Not logged in"}, 401
         required = ["name", "description"]
         data = request.get_json()
         if any(field not in data for field in required):
@@ -142,19 +147,31 @@ class SpeciesResource(Resource):
 class CatchResource(Resource):
     def get(self, catch_id=None):
         user_id = session.get("user_id")
+        if not user_id:
+            return {"message": "Not logged in"}, 401
         if not catch_id:
-            catch_list = Catch.query.filter_by(user_id=user_id).all()
-            return [
-                {
-                    "id": catch.id,
-                    "species_id": catch.species_id,
-                    "species": catch.species.name,
-                    "weight": catch.weight,
-                    "length": catch.length,
-                    "date_caught": catch.date_caught.isoformat(),
-                }
-                for catch in catch_list
-            ], 200
+            page = request.args.get("page", type=int, default=1)
+            per_page = request.args.get("per_page", type=int, default=5)
+            pagination = Catch.query.filter_by(user_id=user_id).paginate(
+                page=page, per_page=per_page, error_out=False
+            )
+            return {
+                "page": pagination.page,
+                "per_page": pagination.per_page,
+                "total": pagination.total,
+                "pages": pagination.pages,
+                "items": [
+                    {
+                        "id": catch.id,
+                        "species_id": catch.species_id,
+                        "species": catch.species.name,
+                        "weight": catch.weight,
+                        "length": catch.length,
+                        "date_caught": catch.date_caught.isoformat(),
+                    }
+                    for catch in pagination.items
+                ],
+            }, 200
         catch = Catch.query.filter_by(id=catch_id, user_id=user_id).first()
         if catch:
             return {
@@ -168,6 +185,10 @@ class CatchResource(Resource):
         return {"message": "Catch not found"}, 404
 
     def post(self):
+        user_id = session.get("user_id")
+        if not user_id:
+            return {"message": "Not logged in"}, 401
+
         data = request.get_json()
         required = ["species_id", "weight", "length"]
         if any(field not in data for field in required):
@@ -195,6 +216,8 @@ class CatchResource(Resource):
 
     def patch(self, catch_id):
         user_id = session.get("user_id")
+        if not user_id:
+            return {"message": "Not logged in"}, 401
         catch = Catch.query.filter_by(id=catch_id, user_id=user_id).first()
         if not catch:
             return {"message": "Catch not found"}, 404
@@ -226,6 +249,8 @@ class CatchResource(Resource):
 
     def delete(self, catch_id):
         user_id = session.get("user_id")
+        if not user_id:
+            return {"message": "Not logged in"}, 401
         catch = Catch.query.filter_by(id=catch_id, user_id=user_id).first()
         if not catch:
             return {"message": "Catch not found"}, 404
