@@ -48,7 +48,7 @@ class Health(Resource):
 
 class Signup(Resource):
     def post(self):
-        data = request.get_json()
+        data = request.get_json() or {}
         username = data.get("username")
         password = data.get("password")
         required = ["username", "password"]

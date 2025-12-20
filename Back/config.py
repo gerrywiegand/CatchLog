@@ -6,7 +6,7 @@ class BaseConfig:
     SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL", "sqlite:///catchlog.db")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-    SESSION_COOKIE_SAMESITE = "None"
+    SESSION_COOKIE_SAMESITE = "Lax"
     SESSION_COOKIE_SECURE = False
     SESSION_COOKIE_HTTPONLY = True
 
