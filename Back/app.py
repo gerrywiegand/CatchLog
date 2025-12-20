@@ -49,6 +49,18 @@ class signup(Resource):
         return {"message": "User created successfully"}, 201
 
 
+class login(Resource):
+    def post(self):
+        data = request.get_json()
+        required = ["username", "password"]
+        if any(field not in data for field in required):
+            return {"message": "Missing required fields"}, 400
+        user = User.query.filter_by(username=data.get("username")).first()
+        if user and check_password_hash(user.password_hash, data.get("password")):
+            return {"message": "Login successful"}, 200
+        return {"message": "Invalid username or password"}, 401
+
+
 class SpeciesResource(Resource):
     def get(self, species_id=None):
         if not species_id:
