@@ -8,7 +8,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 api = Api()
 
-openRoutes = ["/", "/health", "/login", "/signup", "/logout", "/me"]
+openRoutes = {"/", "/health", "/login", "/signup", "/logout", "/me"}
 
 
 def create_app(config_class=DevelopmentConfig):
@@ -46,7 +46,7 @@ class Health(Resource):
         return {"status": "ok"}, 200
 
 
-class signup(Resource):
+class Signup(Resource):
     def post(self):
         data = request.get_json()
         username = data.get("username")
@@ -66,7 +66,7 @@ class signup(Resource):
         return {"id": new_user.id, "username": new_user.username}, 201
 
 
-class login(Resource):
+class Login(Resource):
     def post(self):
         data = request.get_json()
         username = data.get("username")
@@ -87,7 +87,7 @@ class Logout(Resource):
         return {"message": "Logout successful"}, 200
 
 
-class me(Resource):
+class Me(Resource):
     def get(self):
         user_id = session.get("user_id")
         if not user_id:
@@ -191,14 +191,55 @@ class CatchResource(Resource):
             "date_caught": new_catch.date_caught.isoformat(),
         }, 201
 
+    def patch(self, catch_id):
+        user_id = session.get("user_id")
+        catch = Catch.query.filter_by(id=catch_id, user_id=user_id).first()
+        if not catch:
+            return {"message": "Catch not found"}, 404
+
+        data = request.get_json()
+        if "species_id" in data:
+            if not Species.query.get(data["species_id"]):
+                return {"message": "Species not found"}, 404
+            catch.species_id = data["species_id"]
+        if "id" in data:
+            return {"message": "Cannot modify catch ID"}, 400
+        if "weight" in data:
+            if data["weight"] <= 0:
+                return {"message": "Weight must be a positive value"}, 400
+            catch.weight = data["weight"]
+        if "length" in data:
+            if data["length"] <= 0:
+                return {"message": "Length must be a positive value"}, 400
+            catch.length = data["length"]
+
+        db.session.commit()
+        return {
+            "id": catch.id,
+            "species_id": catch.species_id,
+            "weight": catch.weight,
+            "length": catch.length,
+            "date_caught": catch.date_caught,
+        }, 200
+
+    def delete(self, catch_id):
+        user_id = session.get("user_id")
+        catch = Catch.query.filter_by(id=catch_id, user_id=user_id).first()
+        if not catch:
+            return {"message": "Catch not found"}, 404
+
+        db.session.delete(catch)
+        db.session.commit()
+        return {"message": "Catch deleted successfully"}, 200
+
 
 api.add_resource(Home, "/", endpoint="home")
 api.add_resource(Health, "/health", endpoint="health")
 
-api.add_resource(signup, "/signup", endpoint="signup")
-api.add_resource(login, "/login", endpoint="login")
+api.add_resource(Signup, "/signup", endpoint="signup")
+api.add_resource(Login, "/login", endpoint="login")
 api.add_resource(Logout, "/logout", endpoint="logout")
-api.add_resource(me, "/me", endpoint="me")
+api.add_resource(Me, "/me", endpoint="me")
 
 
 api.add_resource(
