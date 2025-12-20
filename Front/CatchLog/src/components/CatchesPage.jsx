@@ -7,6 +7,11 @@ import Spinner from "../utils/Spinner";
 import Container from "@mui/material/Container";
 
 function CatchesPage() {
+  if (!user) {
+    return (
+      <Typography variant="h6">Please log in to view your catches.</Typography>
+    );
+  }
   const [speciesMap, setSpeciesMap] = useState({});
   const [catches, setCatches] = useState([]);
   const [loading, setLoading] = useState(false);
