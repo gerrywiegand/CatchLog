@@ -1,54 +1,73 @@
-import { API_BASE } from "../utils/config";
+const API_BASE = "http://localhost:5000";
 // keeps API calls in one place for easier maintenance
-export const getSpecies = async () => {
-  try {
-    const response = await fetch(`${API_BASE}/species`);
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error fetching species:", error);
-    throw error;
-  }
-};
 
-export const getCatches = async () => {
-  try {
-    const response = await fetch(`${API_BASE}/catches`);
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error fetching catches:", error);
-    throw error;
-  }
-};
-
-export async function createCatch(catchData) {
-  const res = await fetch(`${API_BASE}/catches`, {
-    method: "POST",
+async function apiFetch(path, options = {}) {
+  const res = await fetch(`${API_BASE}${path}`, {
+    ...options,
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
+      ...(options.headers || {}),
     },
+  });
+  const data = await res.json().catch(() => null);
+  if (!res.ok) {
+    throw new Error(data?.message || `Request failed: ${res.status}`);
+  }
+  return data;
+}
+
+export const getSpecies = () => apiFetch("/species");
+export const getSpeciesById = (id) => apiFetch(`/species/${id}`);
+export const createSpecies = (payload) =>
+  apiFetch("/species", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+
+export const getCatches = async ({ page = 1, perPage = 5 } = {}) => {
+  const qs = new URLSearchParams({
+    page: String(page),
+    per_page: String(perPage),
+  });
+  const data = await apiFetch(`/catches?${qs.toString()}`);
+
+  return Array.isArray(data) ? data : data?.items ?? [];
+};
+export const getCatchById = async (id) => apiFetch(`/catches/${id}`);
+
+export const createCatch = async (catchData) =>
+  apiFetch("/catches", {
+    method: "POST",
     body: JSON.stringify(catchData),
   });
-  if (!res.ok) {
-    let data = null;
-    try {
-      data = await res.json();
-    } catch {
-      // Ignore JSON parsing errors
-    }
-    const msg =
-      data?.message ||
-      data?.error ||
-      (data?.errors ? JSON.stringify(data.errors) : null) ||
-      "Request failed: ${res.status}";
-    throw new Error(msg);
-  }
-  return await res.json();
-}
+
+export const signup = (payload) =>
+  apiFetch("/signup", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+
+export const login = (payload) =>
+  apiFetch("/login", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+
+export const logout = () =>
+  apiFetch("/logout", {
+    method: "POST",
+  });
+
+export const getCurrentUser = () => apiFetch("/me");
+
+export const deleteCatch = (id) =>
+  apiFetch(`/catches/${id}`, {
+    method: "DELETE",
+  });
+
+export const updateCatch = (id, catchData) =>
+  apiFetch(`/catches/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify(catchData),
+  });

@@ -7,9 +7,8 @@ import { Link as RouterLink } from "react-router-dom";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import React from "react";
-import theme from "../styles/theme.js";
 
-export default function Navbar() {
+export default function Navbar({ user, setUser }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 

@@ -9,7 +9,7 @@ import Spinner from "../utils/Spinner";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 
-function Home() {
+function Home({ user }) {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -58,6 +58,9 @@ function Home() {
     }
     fetchData();
   }, []);
+  if (!user) {
+    return <Navigate to="/" replace />;
+  }
 
   return (
     <div>

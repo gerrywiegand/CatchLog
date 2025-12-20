@@ -8,9 +8,12 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import theme from "../styles/theme.js";
-import { Container } from "@mui/material";
+import { Container, Typography } from "@mui/material";
 
-function AddCatch() {
+function AddCatch({ user }) {
+  if (!user) {
+    return <Typography variant="h6">Please log in to add a catch.</Typography>;
+  }
   const [species, setSpecies] = useState([]);
   const [selectedSpeciesID, setSelectedSpeciesID] = useState("");
   const [error, setError] = useState(null);
@@ -87,7 +90,6 @@ function AddCatch() {
               length: parseFloat(length),
             };
             setLoading(true);
-            setLoading(true);
             setSubmitError(null);
             console.log("Submitting catch data:", catchData);
             try {
@@ -98,7 +100,6 @@ function AddCatch() {
               console.error("Error creating catch:", error);
               setSubmitError("Failed to create catch");
             } finally {
-              setLoading(false);
               setLoading(false);
             }
           }}
