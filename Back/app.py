@@ -3,9 +3,12 @@ from database import db, migrate
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from flask_restful import Api, Resource
-from models import Catch, Species
+from models import Catch, Species, User
 
 api = Api()
+
+openRoutes = ["/", "/health"]
+protectedRoutes = ["/species", "/catches"]
 
 
 def create_app(config_class=DevelopmentConfig):
@@ -27,6 +30,23 @@ class Home(Resource):
 class Health(Resource):
     def get(self):
         return {"status": "ok"}, 200
+
+
+class signup(Resource):
+    def post(self):
+        data = request.get_json()
+        required = ["username", "password"]
+        if any(field not in data for field in required):
+            return {"message": "Missing required fields"}, 400
+        if User.query.filter_by(username=data.get("username")).first():
+            return {"message": "Username already exists"}, 400
+        new_user = User(
+            username=data.get("username"),
+            password_hash=generate_password_hash(data.get("password")),
+        )
+        db.session.add(new_user)
+        db.session.commit()
+        return {"message": "User created successfully"}, 201
 
 
 class SpeciesResource(Resource):
