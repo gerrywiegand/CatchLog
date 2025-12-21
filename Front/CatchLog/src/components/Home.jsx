@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import Typography from "@mui/material/Typography";
@@ -8,6 +7,7 @@ import CatchTable from "./CatchTable";
 import Spinner from "../utils/Spinner";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
+import { useLocation, useNavigate, Navigate } from "react-router-dom";
 
 function Home({ user }) {
   const location = useLocation();
@@ -39,11 +39,13 @@ function Home({ user }) {
       try {
         const [speciesData, catchesData] = await Promise.all([
           getSpecies(),
-          getCatches(),
+          getCatches({ page: 1, perPage: 5 }),
         ]);
-        const sorted = catchesData.sort(
+
+        const sorted = (catchesData.items || []).sort(
           (a, b) => new Date(b.date_caught) - new Date(a.date_caught)
         );
+
         const speciesMapTemp = {};
         speciesData.forEach((s) => {
           speciesMapTemp[s.id] = s.name;
@@ -111,7 +113,7 @@ function Home({ user }) {
             </Typography>
           )}
         {!loading && !error && catches.length > 0 && (
-          <CatchTable catches={catches.slice(0, 5)} speciesMap={speciesMap} />
+          <CatchTable catches={catches} speciesMap={speciesMap} />
         )}
       </Container>
     </div>

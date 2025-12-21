@@ -11,9 +11,14 @@ async function apiFetch(path, options = {}) {
     },
   });
   const data = await res.json().catch(() => null);
+
   if (!res.ok) {
-    throw new Error(data?.message || `Request failed: ${res.status}`);
+    const err = new Error(data?.message || `Request failed: ${res.status}`);
+    err.status = res.status;
+    err.data = data;
+    throw err;
   }
+
   return data;
 }
 
@@ -30,10 +35,10 @@ export const getCatches = async ({ page = 1, perPage = 5 } = {}) => {
     page: String(page),
     per_page: String(perPage),
   });
-  const data = await apiFetch(`/catches?${qs.toString()}`);
 
-  return Array.isArray(data) ? data : data?.items ?? [];
+  return apiFetch(`/catches?${qs.toString()}`);
 };
+
 export const getCatchById = async (id) => apiFetch(`/catches/${id}`);
 
 export const createCatch = async (catchData) =>
