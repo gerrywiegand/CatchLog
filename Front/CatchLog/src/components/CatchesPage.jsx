@@ -5,17 +5,19 @@ import { getCatches, getSpecies } from "../utils/api";
 import CatchTable from "./CatchTable";
 import Spinner from "../utils/Spinner";
 import Container from "@mui/material/Container";
+import { useNavigate } from "react-router-dom";
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
 
 function CatchesPage() {
-  if (!user) {
-    return (
-      <Typography variant="h6">Please log in to view your catches.</Typography>
-    );
-  }
   const [speciesMap, setSpeciesMap] = useState({});
   const [catches, setCatches] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
+  const [page, setPage] = useState(1);
+  const [pages, setPages] = useState(1);
+  const PER_PAGE = 10;
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
@@ -23,25 +25,33 @@ function CatchesPage() {
       try {
         const [speciesData, catchesData] = await Promise.all([
           getSpecies(),
-          getCatches(),
+          getCatches({ page, perPage: PER_PAGE }),
         ]);
-        const sorted = catchesData.sort(
+
+        const sorted = (catchesData.items || []).sort(
           (a, b) => new Date(b.date_caught) - new Date(a.date_caught)
         );
+
         const speciesMapTemp = {};
         speciesData.forEach((s) => {
           speciesMapTemp[s.id] = s.name;
         });
+
         setSpeciesMap(speciesMapTemp);
         setCatches(sorted);
+        setPages(catchesData.pages || 1);
       } catch (err) {
+        if (err.status === 401) {
+          navigate("/login", { replace: true });
+          return;
+        }
         setError("Failed to fetch data");
       } finally {
         setLoading(false);
       }
     }
     fetchData();
-  }, []);
+  }, [page]);
 
   return (
     <div>
@@ -60,6 +70,13 @@ function CatchesPage() {
         {!loading && !error && catches.length > 0 && (
           <CatchTable catches={catches} speciesMap={speciesMap} />
         )}
+        <Stack alignItems="center" sx={{ mt: 3 }}>
+          <Pagination
+            count={pages}
+            page={page}
+            onChange={(_, value) => setPage(value)}
+          />
+        </Stack>
       </Container>
     </div>
   );
