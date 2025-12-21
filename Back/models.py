@@ -35,6 +35,7 @@ class Catch(db.Model):
     species_id = db.Column(db.Integer, db.ForeignKey("species.id"), nullable=False)
     weight = db.Column(db.Float, nullable=True)
     length = db.Column(db.Float, nullable=True)
+    lure = db.Column(db.String(100), nullable=True)
     date_caught = db.Column(db.DateTime, nullable=False, default=datetime.now)
 
     species = db.relationship("Species", back_populates="catches")
