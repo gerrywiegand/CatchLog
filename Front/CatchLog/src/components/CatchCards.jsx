@@ -58,6 +58,19 @@ export default function CatchCards({ catches = [], speciesMap = {} }) {
                 />
               </Stack>
               <Stack
+                variant="h6"
+                sx={{ width: "100%", mb: 2 }}
+                direction="row"
+                spacing={2}
+                alignItems="center"
+                justifyContent="center"
+              >
+                <PhishingIcon fontSize="medium" color="primary" />
+                <Typography variant="h5">
+                  Lure Used: {catchObj.lure_used || "N/A"}
+                </Typography>
+              </Stack>
+              <Stack
                 sx={{ width: "100%", mb: 2 }}
                 direction="row"
                 spacing={2}

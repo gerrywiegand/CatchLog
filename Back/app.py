@@ -170,6 +170,7 @@ class CatchResource(Resource):
                         "species": catch.species.name,
                         "weight": catch.weight,
                         "length": catch.length,
+                        "lure": catch.lure,
                         "date_caught": catch.date_caught.isoformat(),
                     }
                     for catch in pagination.items
@@ -183,6 +184,7 @@ class CatchResource(Resource):
                 "species": catch.species.name,
                 "weight": catch.weight,
                 "length": catch.length,
+                "lure": catch.lure,
                 "date_caught": catch.date_caught.isoformat(),
             }, 200
         return {"message": "Catch not found"}, 404
@@ -205,6 +207,7 @@ class CatchResource(Resource):
             species_id=data.get("species_id"),
             weight=data.get("weight"),
             length=data.get("length"),
+            lure=data.get("lure"),
             user_id=session.get("user_id"),
         )
         db.session.add(new_catch)
@@ -214,6 +217,7 @@ class CatchResource(Resource):
             "species_id": new_catch.species_id,
             "weight": new_catch.weight,
             "length": new_catch.length,
+            "lure": new_catch.lure,
             "date_caught": new_catch.date_caught.isoformat(),
         }, 201
 
@@ -240,6 +244,8 @@ class CatchResource(Resource):
             if data["length"] <= 0:
                 return {"message": "Length must be a positive value"}, 400
             catch.length = data["length"]
+        if "lure" in data:
+            catch.lure = data["lure"]
 
         db.session.commit()
         return {
@@ -247,6 +253,7 @@ class CatchResource(Resource):
             "species_id": catch.species_id,
             "weight": catch.weight,
             "length": catch.length,
+            "lure": catch.lure,
             "date_caught": catch.date_caught,
         }, 200
 

@@ -28,6 +28,7 @@ function CatchTable({ catches = [], speciesMap = {} }) {
             <TableCell>Species</TableCell>
             <TableCell align="right">Weight (lbs)</TableCell>
             <TableCell align="right">Length (inches)</TableCell>
+            <TableCell align="right">Lure Used</TableCell>
             <TableCell>Date</TableCell>
           </TableRow>
         </TableHead>
@@ -45,6 +46,7 @@ function CatchTable({ catches = [], speciesMap = {} }) {
               </TableCell>
               <TableCell align="right">{catchObj.weight}</TableCell>
               <TableCell align="right">{catchObj.length}</TableCell>
+              <TableCell align="right">{catchObj.lure_used || "-"}</TableCell>
               <TableCell>
                 {catchObj.date_caught
                   ? new Date(catchObj.date_caught).toLocaleString()

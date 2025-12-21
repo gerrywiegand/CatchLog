@@ -9,6 +9,7 @@ import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import theme from "../styles/theme.js";
 import { Container, Typography } from "@mui/material";
+import Grid from "@mui/material/Grid";
 
 function AddCatch({ user }) {
   if (!user) {
@@ -21,6 +22,7 @@ function AddCatch({ user }) {
   const [weight, setWeight] = useState("");
   const [length, setLength] = useState("");
   const [submitError, setSubmitError] = useState(null);
+  const [lure, setLure] = useState("");
   const navigate = useNavigate();
   const canSubmit = selectedSpeciesID && weight && length ? true : false; // Simple validation
 
@@ -58,24 +60,39 @@ function AddCatch({ user }) {
           }}
           renderInput={(params) => <TextField {...params} label="Species" />}
         />
-        <Box sx={{ display: "flex", gap: 4, mt: 2 }}>
-          <TextField
-            label="Weight(lbs)"
-            type="number"
-            slotProps={{ htmlInput: { min: 0.1, max: 500, step: 0.1 } }}
-            size="small"
-            value={weight}
-            onChange={(e) => setWeight(e.target.value)}
-          />
-          <TextField
-            label="Length(in)"
-            type="number"
-            slotProps={{ htmlInput: { min: 0.1, max: 300, step: 0.1 } }}
-            value={length}
-            size="small"
-            onChange={(e) => setLength(e.target.value)}
-          />
+        <Box sx={{ mt: 2 }}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Weight (lbs)"
+                type="number"
+                fullWidth
+                value={weight}
+                onChange={(e) => setWeight(e.target.value)}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Length (in)"
+                type="number"
+                fullWidth
+                value={length}
+                onChange={(e) => setLength(e.target.value)}
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <TextField
+                label="Lure (optional)"
+                fullWidth
+                value={lure}
+                onChange={(e) => setLure(e.target.value)}
+              />
+            </Grid>
+          </Grid>
         </Box>
+
         <Button
           color="success"
           variant="contained"
@@ -88,6 +105,7 @@ function AddCatch({ user }) {
               species_id: selectedSpeciesID,
               weight: parseFloat(weight),
               length: parseFloat(length),
+              lure: lure.trim() ? lure.trim() : null,
             };
             setLoading(true);
             setSubmitError(null);
