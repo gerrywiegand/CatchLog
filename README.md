@@ -43,7 +43,8 @@ clone repo (https://github.com/gerrywiegand/CatchLog.git)
 ### Backend
 
 Database will be blank by default. Run seed_species to populate generic fish species
-** WARNING ** do not seed_species after you have begun using the app, it will delete all records
+** WARNING **
+do not seed_species after you have begun using the app, it will delete all records
 
 ```bash
 cd Back
