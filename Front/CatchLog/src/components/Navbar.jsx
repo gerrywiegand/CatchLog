@@ -27,6 +27,7 @@ export default function Navbar({ user, setUser }) {
               { label: "Home", to: "/" },
               { label: "Add Catch", to: "/addcatch" },
               { label: "View Catches", to: "/catches" },
+              { label: "Species", to: "/species" },
             ].map((item) => (
               <Button
                 key={item.to}

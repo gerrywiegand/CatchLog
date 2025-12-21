@@ -12,6 +12,7 @@ import Login from "./components/Login.jsx";
 import Signup from "./components/Signup.jsx";
 import Landing from "./components/Landing.jsx";
 import BottomBar from "./components/BottomBar.jsx";
+import SpeciesPage from "./components/SpeciesPage.jsx";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -31,6 +32,7 @@ function App() {
             <Route path="/home" element={<Home user={user} />} />
             <Route path="/addcatch" element={<AddCatch user={user} />} />
             <Route path="/catches" element={<CatchesPage user={user} />} />
+            <Route path="/species" element={<SpeciesPage />} />
             <Route path="/login" element={<Login setUser={setUser} />} />
             <Route path="/signup" element={<Signup setUser={setUser} />} />
           </Routes>
