@@ -152,9 +152,12 @@ class CatchResource(Resource):
         if not catch_id:
             page = request.args.get("page", type=int, default=1)
             per_page = request.args.get("per_page", type=int, default=5)
-            pagination = Catch.query.filter_by(user_id=user_id).paginate(
-                page=page, per_page=per_page, error_out=False
+            pagination = (
+                Catch.query.filter_by(user_id=user_id)
+                .order_by(Catch.date_caught.desc())
+                .paginate(page=page, per_page=per_page, error_out=False)
             )
+
             return {
                 "page": pagination.page,
                 "per_page": pagination.per_page,
