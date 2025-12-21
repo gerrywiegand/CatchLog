@@ -254,7 +254,7 @@ class CatchResource(Resource):
             "weight": catch.weight,
             "length": catch.length,
             "lure": catch.lure,
-            "date_caught": catch.date_caught,
+            "date_caught": catch.date_caught.isoformat(),
         }, 200
 
     def delete(self, catch_id):

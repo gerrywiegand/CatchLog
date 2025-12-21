@@ -9,8 +9,16 @@ import Stack from "@mui/material/Stack";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import Chip from "@mui/material/Chip";
 import SetMealIcon from "@mui/icons-material/SetMeal";
+import IconButton from "@mui/material/IconButton";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
-export default function CatchCards({ catches = [], speciesMap = {} }) {
+export default function CatchCards({
+  catches = [],
+  speciesMap = {},
+  onEdit,
+  onDelete,
+}) {
   return (
     <div>
       {catches.map((catchObj) => {
@@ -67,7 +75,7 @@ export default function CatchCards({ catches = [], speciesMap = {} }) {
               >
                 <PhishingIcon fontSize="medium" color="primary" />
                 <Typography variant="h5">
-                  Lure Used: {catchObj.lure_used || "N/A"}
+                  Lure Used: {catchObj.lure || "N/A"}
                 </Typography>
               </Stack>
               <Stack
@@ -81,6 +89,28 @@ export default function CatchCards({ catches = [], speciesMap = {} }) {
                 <Typography variant="h5">
                   {new Date(catchObj.date_caught).toLocaleDateString()}
                 </Typography>
+              </Stack>
+              <Stack
+                direction="row"
+                spacing={2}
+                justifyContent="center"
+                sx={{ mt: 2 }}
+              >
+                <IconButton
+                  onClick={() => onEdit?.(catchObj)}
+                  aria-label="edit"
+                  sx={{ width: 64, height: 64 }}
+                >
+                  <EditIcon fontSize="large" />
+                </IconButton>
+
+                <IconButton
+                  onClick={() => onDelete?.(catchObj)}
+                  aria-label="delete"
+                  sx={{ width: 64, height: 64 }}
+                >
+                  <DeleteIcon fontSize="large" />
+                </IconButton>
               </Stack>
             </CardContent>
           </Card>

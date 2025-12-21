@@ -18,6 +18,7 @@ function Home({ user }) {
 
   const [speciesMap, setSpeciesMap] = useState({});
   const [catches, setCatches] = useState([]);
+  const [speciesList, setSpeciesList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -33,32 +34,34 @@ function Home({ user }) {
     }
   }, [location.search]);
 
-  useEffect(() => {
-    async function fetchData() {
-      setLoading(true);
-      setError(null);
-      try {
-        const [speciesData, catchesData] = await Promise.all([
-          getSpecies(),
-          getCatches({ page: 1, perPage: 5 }),
-        ]);
+  const fetchData = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const [speciesData, catchesData] = await Promise.all([
+        getSpecies(),
+        getCatches({ page: 1, perPage: 5 }),
+      ]);
 
-        const sorted = (catchesData.items || []).sort(
-          (a, b) => new Date(b.date_caught) - new Date(a.date_caught)
-        );
+      const sorted = (catchesData.items || []).sort(
+        (a, b) => new Date(b.date_caught) - new Date(a.date_caught)
+      );
 
-        const speciesMapTemp = {};
-        speciesData.forEach((s) => {
-          speciesMapTemp[s.id] = s.name;
-        });
-        setSpeciesMap(speciesMapTemp);
-        setCatches(sorted);
-      } catch (err) {
-        setError("Failed to fetch data");
-      } finally {
-        setLoading(false);
-      }
+      const speciesMapTemp = {};
+      speciesData.forEach((s) => {
+        speciesMapTemp[s.id] = s.name;
+      });
+      setSpeciesList(speciesData);
+      setSpeciesMap(speciesMapTemp);
+      setCatches(sorted);
+    } catch (err) {
+      setError("Failed to fetch data");
+    } finally {
+      setLoading(false);
     }
+  };
+
+  useEffect(() => {
     fetchData();
   }, []);
   if (!user) {
@@ -115,7 +118,12 @@ function Home({ user }) {
             </Typography>
           )}
         {!loading && !error && catches.length > 0 && (
-          <CatchTable catches={catches} speciesMap={speciesMap} />
+          <CatchTable
+            catches={catches}
+            speciesMap={speciesMap}
+            speciesList={speciesList}
+            onRefresh={fetchData}
+          />
         )}
       </Container>
     </div>
