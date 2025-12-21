@@ -91,79 +91,77 @@ function CatchTable({
       setSaving(false);
     }
   }
-  if (isMobile) {
-    // Show cards on mobile
-    return (
-      <CatchCards
-        catches={catches}
-        speciesMap={speciesMap}
-        onEdit={openEdit}
-        onDelete={openDelete}
-      />
-    );
-  }
 
   return (
-    // Show table on desktop
     <>
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="catch table">
-          <TableHead>
-            <TableRow>
-              <TableCell>Catch ID</TableCell>
-              <TableCell>Species</TableCell>
-              <TableCell align="right">Weight (lbs)</TableCell>
-              <TableCell align="right">Length (inches)</TableCell>
-              <TableCell align="right">Lure Used</TableCell>
-              <TableCell>Date</TableCell>
-              <TableCell align="right">Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {catches.map((catchObj) => (
-              <TableRow
-                key={catchObj.id}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
-                <TableCell component="th" scope="row">
-                  {catchObj.id}
-                </TableCell>
-
-                <TableCell>
-                  {speciesMap[catchObj.species_id] || "Unknown"}
-                </TableCell>
-
-                <TableCell align="right">{catchObj.weight}</TableCell>
-
-                <TableCell align="right">{catchObj.length}</TableCell>
-
-                <TableCell align="right">{catchObj.lure || "-"}</TableCell>
-
-                <TableCell>
-                  {catchObj.date_caught
-                    ? new Date(catchObj.date_caught).toLocaleString()
-                    : ""}
-                </TableCell>
-
-                <TableCell align="right">
-                  <IconButton
-                    onClick={() => openEdit(catchObj)}
-                    aria-label="edit"
-                  >
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton
-                    onClick={() => openDelete(catchObj)}
-                    aria-label="delete"
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </TableCell>
+      {isMobile ? (
+        <CatchCards
+          catches={catches}
+          speciesMap={speciesMap}
+          onEdit={openEdit}
+          onDelete={openDelete}
+        />
+      ) : (
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 650 }} aria-label="catch table">
+            <TableHead>
+              <TableRow>
+                <TableCell>Catch ID</TableCell>
+                <TableCell>Species</TableCell>
+                <TableCell align="right">Weight (lbs)</TableCell>
+                <TableCell align="right">Length (inches)</TableCell>
+                <TableCell align="right">Lure Used</TableCell>
+                <TableCell>Date</TableCell>
+                <TableCell align="right">Actions</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+
+            <TableBody>
+              {catches.map((catchObj) => (
+                <TableRow
+                  key={catchObj.id}
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
+                  <TableCell component="th" scope="row">
+                    {catchObj.id}
+                  </TableCell>
+
+                  <TableCell>
+                    {speciesMap[catchObj.species_id] || "Unknown"}
+                  </TableCell>
+
+                  <TableCell align="right">{catchObj.weight}</TableCell>
+                  <TableCell align="right">{catchObj.length}</TableCell>
+                  <TableCell align="right">{catchObj.lure || "-"}</TableCell>
+
+                  <TableCell>
+                    {catchObj.date_caught
+                      ? new Date(catchObj.date_caught).toLocaleString()
+                      : ""}
+                  </TableCell>
+
+                  <TableCell align="right">
+                    <IconButton
+                      onClick={() => openEdit(catchObj)}
+                      aria-label="edit"
+                    >
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton
+                      onClick={() => openDelete(catchObj)}
+                      aria-label="delete"
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
+
+      {/* ✅ dialogs ALWAYS mounted (mobile + desktop) */}
       <Dialog
         open={editOpen}
         onClose={() => setEditOpen(false)}
@@ -171,9 +169,10 @@ function CatchTable({
         maxWidth="sm"
       >
         <DialogTitle>Edit Catch</DialogTitle>
+
         <DialogContent>
           <Stack spacing={2} sx={{ mt: 1 }}>
-            {speciesList.length > 0 && (
+            {speciesList.length > 0 ? (
               <TextField
                 select
                 label="Species"
@@ -189,7 +188,15 @@ function CatchTable({
                   </MenuItem>
                 ))}
               </TextField>
+            ) : (
+              <TextField
+                label="Species"
+                value="Loading..."
+                disabled
+                fullWidth
+              />
             )}
+
             <TextField
               label="Weight (lbs)"
               type="number"
@@ -253,5 +260,4 @@ function CatchTable({
     </>
   );
 }
-
 export default CatchTable;

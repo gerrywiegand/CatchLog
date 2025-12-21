@@ -39,7 +39,14 @@ export default function BottomBar({ user, setUser }) {
 
   return (
     <Paper
-      sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}
+      sx={{
+        position: "fixed",
+        bottom: 0,
+        left: 0,
+        right: 0,
+        zIndex: 1300,
+        width: "100%",
+      }}
       elevation={8}
     >
       <BottomNavigation

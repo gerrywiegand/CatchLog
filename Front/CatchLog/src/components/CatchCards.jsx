@@ -99,7 +99,13 @@ export default function CatchCards({
                 <IconButton
                   onClick={() => onEdit?.(catchObj)}
                   aria-label="edit"
-                  sx={{ width: 64, height: 64 }}
+                  sx={{
+                    width: 64,
+                    height: 64,
+                    pointerEvents: "auto",
+                    zIndex: 1,
+                  }}
+                  color="primary"
                 >
                   <EditIcon fontSize="large" />
                 </IconButton>
@@ -107,7 +113,13 @@ export default function CatchCards({
                 <IconButton
                   onClick={() => onDelete?.(catchObj)}
                   aria-label="delete"
-                  sx={{ width: 64, height: 64 }}
+                  sx={{
+                    width: 64,
+                    height: 64,
+                    pointerEvents: "auto",
+                    zIndex: 1,
+                  }}
+                  color="error"
                 >
                   <DeleteIcon fontSize="large" />
                 </IconButton>
