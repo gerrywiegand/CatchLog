@@ -1,5 +1,4 @@
-import { StrictMode, useState, useEffect } from "react";
-import React from "react";
+import { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import Home from "./components/Home.jsx";
 import AddCatch from "./components/AddCatch.jsx";

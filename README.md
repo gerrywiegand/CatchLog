@@ -45,18 +45,19 @@ clone repo (https://github.com/gerrywiegand/CatchLog.git)
 Database will be blank by default. Run seed_species to populate generic fish species
 
 ```bash
-cd backend
+cd Back
 pipenv install
 pipenv shell
 flask db upgrade
 python seed_species.py
-flask Run
+flask run
 ```
 
 ### Frontend
 
 ```bash
-cd frontend
+cd Front
+cd CatchLog
 npm install
 npm run dev
 ```

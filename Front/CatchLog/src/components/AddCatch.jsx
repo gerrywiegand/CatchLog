@@ -112,7 +112,6 @@ function AddCatch({ user }) {
             console.log("Submitting catch data:", catchData);
             try {
               await createCatch(catchData);
-              console.log("Catch created successfully");
               navigate("/home?created=1");
             } catch (error) {
               console.error("Error creating catch:", error);

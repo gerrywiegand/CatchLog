@@ -22,10 +22,8 @@ export default function Login({ setUser }) {
     setError("");
 
     try {
-      // Login sets the session cookie
       await login({ username, password });
 
-      // Then fetch /me so we store the canonical user object
       const meUser = await getCurrentUser();
       setUser(meUser);
 
