@@ -113,7 +113,7 @@ function AddCatch({ user }) {
             try {
               await createCatch(catchData);
               console.log("Catch created successfully");
-              navigate("/?created=1");
+              navigate("/home?created=1");
             } catch (error) {
               console.error("Error creating catch:", error);
               setSubmitError("Failed to create catch");

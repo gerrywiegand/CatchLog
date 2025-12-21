@@ -14,6 +14,7 @@ import {
   TableCell,
   TableBody,
 } from "@mui/material";
+import Snackbar from "@mui/material/Snackbar";
 import Spinner from "../utils/Spinner";
 import { getSpecies, createSpecies } from "../utils/api";
 
@@ -27,6 +28,9 @@ export default function SpeciesPage() {
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+
+  const [successOpen, setSuccessOpen] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
   const canSubmit = name.trim() && description.trim() && !saving;
 
@@ -69,6 +73,9 @@ export default function SpeciesPage() {
 
       await createSpecies(payload);
 
+      setSuccessMessage(`Species added: ${payload.name} ✅`);
+      setSuccessOpen(true);
+
       // reset form
       setName("");
       setDescription("");
@@ -88,6 +95,22 @@ export default function SpeciesPage() {
 
   return (
     <Container maxWidth="md" sx={{ mt: 4, mb: 6 }}>
+      <Snackbar
+        open={successOpen}
+        autoHideDuration={3500}
+        onClose={() => setSuccessOpen(false)}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert
+          onClose={() => setSuccessOpen(false)}
+          severity="success"
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          {successMessage}
+        </Alert>
+      </Snackbar>
+
       <Stack spacing={3} alignItems="center">
         <Typography variant="h4" fontWeight={700}>
           Species

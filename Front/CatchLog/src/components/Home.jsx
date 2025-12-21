@@ -26,11 +26,12 @@ function Home({ user }) {
     const created = params.get("created");
     const species = params.get("species");
     if (created === "1") {
-      setOpen(true);
       setMessage(species ? `Catch created: ${species} ✅` : "Catch created ✅");
-      navigate("/", { replace: true });
+      setOpen(true);
+
+      window.history.replaceState({}, "", "/home");
     }
-  }, [location.search, navigate]);
+  }, [location.search]);
 
   useEffect(() => {
     async function fetchData() {
@@ -99,6 +100,7 @@ function Home({ user }) {
             onClose={() => setOpen(false)}
             severity="success"
             variant="filled"
+            sx={{ width: "100%" }}
           >
             {message}
           </Alert>
