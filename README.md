@@ -2,6 +2,9 @@
 
 CatchLog is a full-stack productivity application built with React and Flask that allows users to log and track their fishing catches. Users can authenticate, manage species, record catch data, and view their catch history with pagination.
 
+## Demo
+https://www.loom.com/share/17635d25f7ae4d71ba356157d2c45a2f
+
 ## Features
 
 - User authentication with session-based login
